@@ -1,0 +1,26 @@
+@import "../../../../assets/styles/auth-form";
+
+.signup {
+  padding-top: 123px;
+  padding-bottom: 120px;
+  min-height: 100vh;
+
+  .container {
+    display: flex;
+    vertical-align: top;
+    justify-content: flex-start;
+
+    .auth-form {
+      margin-top: 0;
+      margin-right: 185px;
+
+      .auth-title {
+        margin-top: 0;
+      }
+
+      .auth-checkbox {
+        margin-top: 10px;
+      }
+    }
+  }
+}

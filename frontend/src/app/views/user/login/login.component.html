@@ -1,0 +1,47 @@
+<div class="login" [formGroup]="loginForm">
+  <div class="container">
+    <div class="auth-form">
+      <div class="auth-title">Войти в личный кабинет</div>
+
+      <div class="auth-inputs">
+        <div class="auth-input">
+          <input type="text" placeholder="Электронная почта" formControlName="email">
+          <div
+            *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.touched || loginForm.get('email')?.dirty)">
+            <div class="invalid-feedback" *ngIf="loginForm.get('email')?.errors?.['required']">
+              Необходимо ввести email.
+            </div>
+            <div class="invalid-feedback" *ngIf="loginForm.get('email')?.errors?.['email']">
+              Введите корректный email.
+            </div>
+          </div>
+        </div>
+        <div class="auth-input">
+          <input type="password" placeholder="Пароль" formControlName="password">
+          <div
+            *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)">
+            <div class="invalid-feedback" *ngIf="loginForm.get('password')?.errors?.['required']">
+              Необходимо ввести пароль.
+            </div>
+          </div>
+        </div>
+        <div class="auth-checkbox">
+          <input type="checkbox" id="rememberMe" formControlName="rememberMe">
+          <label for="rememberMe">Запомнить меня</label>
+        </div>
+      </div>
+
+      <div class="auth-button">
+        <button class="button" [disabled]="loginForm.invalid" (click)="logIn()">Войти</button>
+      </div>
+
+      <div class="auth-link">
+        Нет аккаунта? <a routerLink="/signup">Зарегистрируйтесь</a>
+      </div>
+    </div>
+
+    <div class="auth-image">
+      <img src="/assets/images/login.png" alt="Логин">
+    </div>
+  </div>
+</div>

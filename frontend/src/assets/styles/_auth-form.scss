@@ -1,0 +1,90 @@
+@import "variables";
+
+.auth-form {
+  width: 430px;
+  margin-top: 14px;
+  margin-right: 178px;
+
+  .auth-title {
+    color: $light-blue;
+    font-family: "Lora Regular", sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 400;
+    margin-bottom: 40px;
+    line-height: 1;
+  }
+
+  .auth-inputs {
+    margin-bottom: 40px;
+
+    .auth-input {
+      margin-bottom: 5px;
+
+      input {
+        width: 422px;
+        padding: 20px 64px 20px 20px;
+        border-radius: 3px;
+        border: 2px solid $light-blue;
+        background: #FFF;
+        color: $light-blue;
+        font-family: "Montserrat Regular", sans-serif;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+
+        &::placeholder {
+          color: $gray;
+          font-family: "Montserrat Regular", sans-serif;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .auth-checkbox {
+      margin-top: 7px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: start;
+      max-width: 422px;
+
+      label {
+        margin-left: 10px;
+        color: $dark-blue;
+        font-family: "Montserrat Regular", sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        text-align: start;
+        line-height: 1;
+
+        a {
+          text-decoration: none;
+          color: $light-blue;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .auth-button {
+    width: 422px;
+    margin-bottom: 10px;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .auth-link {
+    color: $dark-blue;
+    font-family: "Montserrat Regular", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+
+    a {
+      text-decoration: none;
+      color: $light-blue;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+@import "../../../../assets/styles/auth-form";
+
+.login {
+  padding-top: 104px;
+  padding-bottom: 92px;
+  min-height: 100vh;
+
+  .container {
+    display: flex;
+    vertical-align: top;
+    justify-content: flex-start;
+  }
+}

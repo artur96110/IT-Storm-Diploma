@@ -1,0 +1,199 @@
+@import "../../../../assets/styles/variables";
+@import "../../../../assets/styles/mixins";
+
+.blog {
+  min-height: 100vh;
+  padding-top: 80px;
+  padding-bottom: 120px;
+
+  .container {
+    .blog-title {
+      @include head-lora-38;
+      text-align: left;
+      margin-bottom: 40px;
+    }
+
+    .blog-filters {
+      position: relative;
+      width: 100%;
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: "Montserrat Regular", sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+
+      .blog-filters-active {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        .blog-filters-active-item {
+          padding: 8px 20px;
+          border-radius: 5px;
+          border: 2px solid $light-blue;
+          display: flex;
+          align-items: center;
+          margin-right: 10px;
+          margin-bottom: 10px;
+
+          p {
+            color: $light-blue;
+            margin-right: 8px;
+            margin-bottom: 0;
+          }
+
+          svg {
+            cursor: pointer;
+          }
+        }
+      }
+
+      .blog-filters-select {
+        position: relative;
+        width: 257px;
+
+        &.open .blog-filters-select-head {
+          background-color: #B9D5FD;
+        }
+
+        &.open .blog-filters-select-body {
+          display: block;
+        }
+
+        .blog-filters-select-head {
+          padding: 12px 23px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #FFFFFF;
+          border-radius: 5px 5px 0 0;
+          cursor: pointer;
+        }
+
+        .blog-filters-select-body {
+          display: none;
+          padding: 12px 23px;
+          width: 257px;
+          position: absolute;
+          border-radius: 0 0 5px 5px;
+          border: 2px solid #B9D5FD;
+          background-color: #FFFFFF;
+          box-sizing: border-box;
+          z-index: 3;
+
+          .blog-filters-select-item {
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #BEBEBE;
+            font-family: "Montserrat Regular", sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            cursor: pointer;
+
+            &.blog-filters-select-item .plus {
+              display: block;
+            }
+
+            &.blog-filters-select-item .minus {
+              display: none;
+            }
+
+            &.active {
+              color: $dark-blue;
+            }
+
+            &.active .plus {
+              display: none;
+            }
+
+            &.active .minus {
+              display: block;
+            }
+
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+
+            p {
+              margin-bottom: 0;
+            }
+
+            span {
+              font-size: 24px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .blog-articles {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(4, auto);
+    grid-row-gap: 40px;
+    margin-bottom: 60px;
+  }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+
+    .pagination-arrow {
+      margin-right: 40px;
+      margin-left: 40px;
+      cursor: pointer;
+      color: #B9D5FD;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.disabled {
+        color: #BEBEBE;
+        cursor: default;
+      }
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    .pagination-pages {
+      display: flex;
+      align-items: center;
+
+      .pagination-page {
+        padding: 10px;
+        color: $dark-blue;
+        text-align: center;
+        font-family: "Montserrat Regular", sans-serif;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        margin-right: 20px;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        &.active {
+          color: #B9D5FD;
+        }
+      }
+    }
+  }
+}
+
+
