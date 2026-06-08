@@ -1,0 +1,100 @@
+@import "../../../../assets/styles/variables";
+
+.footer {
+  background-color: #B9D5FD;;
+  padding-top: 40px;
+  padding-bottom: 54px;
+  text-align: start;
+  color: $dark-blue;
+  font-family: "Montserrat Regular", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+
+  .container {
+    .footer-top {
+      display: flex;
+      align-items: center;
+      margin-bottom: 40px;
+
+      .footer-top-logo {
+        margin-right: 40px;
+        cursor: pointer;
+
+        img {
+          width: 85px;
+          height: 47px;
+        }
+      }
+
+      .footer-top-menu nav ul {
+        display: flex;
+        align-items: center;
+        list-style: none;
+
+        li {
+          margin-right: 20px;
+          cursor: pointer;
+
+          a {
+            color: $dark-blue;
+            text-decoration: none;
+
+            &.active {
+              color: $light-blue;
+            }
+          }
+        }
+      }
+    }
+
+    .footer-middle {
+      display: flex;
+      align-items: start;
+      justify-content: start;
+      margin-bottom: 6px;
+
+      .footer-middle-block {
+        max-width: 253px;
+        margin-right: 60px;
+        height: 100%;
+
+        .footer-middle-block-title {
+          color: #709FDC;
+          font-family: "Montserrat Medium", sans-serif;
+          font-weight: 500;
+          text-align: start;
+          margin-bottom: 10px;
+
+        }
+
+        .footer-middle-block-content {
+          a {
+            text-decoration: none;
+            color: $dark-blue;
+            font-family: "Montserrat Regular", sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+          }
+
+          a svg {
+            margin-top: 5px;
+            margin-right: 12px;
+            cursor: pointer;
+          }
+        }
+
+        .footer-button {
+          margin-top: 10px;
+          width: 100%;
+          font-family: "Montserrat Medium", sans-serif;
+          font-size: 12px;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .footer-bottom {
+      color: #709FDC;
+    }
+  }
+}

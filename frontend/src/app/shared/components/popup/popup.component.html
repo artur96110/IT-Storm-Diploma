@@ -1,0 +1,80 @@
+<ng-template #popup>
+  <div class="close-popup" (click)="closePopup()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="1.93562" y1="2.64999" x2="13.9564" y2="14.6708" stroke="#BEBEBE" stroke-linecap="round"/>
+      <line x1="13.9236" y1="2.62978" x2="1.90277" y2="14.6506" stroke="#BEBEBE" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="modal-header">
+    <h5 class="modal-title" *ngIf="stylePopup === PopupStyleType.consultation">Закажите бесплатную консультацию!</h5>
+    <h5 class="modal-title" *ngIf="stylePopup === PopupStyleType.order">Заявка на услугу</h5>
+    <h5 class="modal-title" *ngIf="stylePopup === PopupStyleType.success">Спасибо за вашу заявку!</h5>
+  </div>
+  <div class="modal-body" [formGroup]="popupForm">
+    <select *ngIf="stylePopup === PopupStyleType.order" formControlName="order">
+      <option *ngFor="let category of categories" value="{{ category.url}}">{{ category.name }}</option>
+    </select>
+
+    <input type="text" placeholder="Ваше имя"
+           *ngIf="stylePopup === PopupStyleType.order || stylePopup === PopupStyleType.consultation"
+           formControlName="name" [readonly]="auth.getIsLoggedIn()">
+
+    <div
+      *ngIf="popupForm.get('name')?.invalid && (popupForm.get('name')?.touched || popupForm.get('name')?.dirty)">
+      <div class="invalid-feedback" *ngIf="popupForm.get('name')?.errors?.['required']">
+        Необходимо ввести имя!
+      </div>
+      <div class="invalid-feedback" *ngIf="popupForm.get('name')?.errors?.['pattern']">
+        Имя должно быть написано на русском языке с заглавной буквы и состоять минимум из двух букв!
+      </div>
+    </div>
+
+    <input type="text" placeholder="Ваш номер телефона"
+           *ngIf="stylePopup === PopupStyleType.order || stylePopup === PopupStyleType.consultation"
+           formControlName="phone">
+    <div *ngIf="popupForm.get('phone')?.invalid && (popupForm.get('phone')?.touched || popupForm.get('phone')?.dirty)">
+      <div class="invalid-feedback" *ngIf="popupForm.get('phone')?.errors?.['required']">
+        Необходимо ввести номер телефона!
+      </div>
+      <div class="invalid-feedback" *ngIf="popupForm.get('phone')?.errors?.['pattern']">
+        Введите корректный номер телефона в международном формате начиная с +7... или с 8...!
+      </div>
+    </div>
+
+    <p *ngIf="stylePopup === PopupStyleType.success">Мы свяжемся с вами при первой же возможности.</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="button button-popup"
+      [disabled]="popupForm.invalid"
+      *ngIf="stylePopup === PopupStyleType.consultation"
+      (click)="callBack(PopupStyleType.consultation)">
+      Заказать консультацию
+    </button>
+
+    <button
+      type="button"
+      class="button button-popup"
+      [disabled]="popupForm.invalid"
+      *ngIf="stylePopup === PopupStyleType.order"
+      (click)="callBack(PopupStyleType.order)">
+      Оставить заявку
+    </button>
+
+    <button
+      type="button"
+      class="button button-popup"
+      *ngIf="stylePopup === PopupStyleType.success"
+      [style]="'padding: 10px 20px; width: auto; margin: 0 auto'"
+      (click)="closePopup()">
+      Окей
+    </button>
+
+    <div class="request-error" *ngIf="requestError">
+      {{ requestError }}
+    </div>
+  </div>
+</ng-template>
+
+
