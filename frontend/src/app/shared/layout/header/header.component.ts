@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from "../../../core/auth/auth.service";
-import {Router} from "@angular/router";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {UserService} from "../../services/user.service";
-import {DefaultResponseType} from "../../../../types/default-response.type";
-import {UserInfoType} from "../../../../types/user-info.type";
-import {HttpErrorResponse} from "@angular/common/http";
-import {ActiveMenuService} from "../../services/active-menu.service";
+import { AuthService } from "../../../core/auth/auth.service";
+import { Router } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { UserService } from "../../services/user.service";
+import { DefaultResponseType } from "../../../../types/default-response.type";
+import { UserInfoType } from "../../../../types/user-info.type";
+import { HttpErrorResponse } from "@angular/common/http";
+import { ActiveMenuService } from "../../services/active-menu.service";
 
 @Component({
   selector: 'app-header',
@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit {
 
   userLogged: boolean;
   userName: string | null = null;
+  burgerOpen = false;
 
   constructor(
     private authService: AuthService,
@@ -29,12 +30,11 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     if (this.userLogged) {
       this.getUserName();
     }
 
-    this.authService.isLogged$.subscribe((isLoggedIn: boolean) => {
+    this.authService.isLogged$.subscribe((isLoggedIn: boolean): void => {
       this.userLogged = isLoggedIn;
 
       if (isLoggedIn) {
@@ -45,20 +45,20 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  public ngAfterViewChecked() {
+  public ngAfterViewChecked(): void {
     this.activeMenu.activeMenuItem();
   }
 
   public logOut(): void {
     this.authService.logout()
       .subscribe({
-        next: () => {
+        next: (): void => {
           this.doLogOut();
         },
-        error: () => {
+        error: (): void => {
           this.doLogOut();
         }
-      })
+      });
   }
 
   public doLogOut(): void {
@@ -70,17 +70,15 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  public getUserName() {
-
+  public getUserName(): void {
     if (!this.authService.getIsLoggedIn()) {
       return;
     }
 
     this.userService.getUserInfo()
       .subscribe({
-        next: ((data: DefaultResponseType | UserInfoType) => {
-
-          let error = null;
+        next: (data: DefaultResponseType | UserInfoType): void => {
+          let error: string | null = null;
 
           if ((data as DefaultResponseType).error !== undefined) {
             error = (data as DefaultResponseType).message;
@@ -98,10 +96,9 @@ export class HeaderComponent implements OnInit {
           }
 
           this.userName = userInfo.name;
-        }),
+        },
 
-        error: ((errorResponse: HttpErrorResponse) => {
-
+        error: (errorResponse: HttpErrorResponse): void => {
           if (errorResponse.status === 401) {
             return;
           }
@@ -111,11 +108,9 @@ export class HeaderComponent implements OnInit {
           } else {
             this._snackBar.open('Ошибка при запросе данных пользователя!');
           }
-        })
-      })
+        }
+      });
   }
-
-  burgerOpen: boolean = false;
 
   toggleBurger(): void {
     this.burgerOpen = !this.burgerOpen;
@@ -125,4 +120,3 @@ export class HeaderComponent implements OnInit {
     this.burgerOpen = false;
   }
 }
-

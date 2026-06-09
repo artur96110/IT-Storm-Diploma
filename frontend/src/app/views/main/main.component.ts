@@ -1,12 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {OwlOptions} from "ngx-owl-carousel-o";
-import {PopupComponent} from "../../shared/components/popup/popup.component";
-import {ArticleType} from "../../../types/article.type";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {ArticlesService} from "../../shared/services/articles.service";
-import {DefaultResponseType} from "../../../types/default-response.type";
-import {PopupStyleType} from 'src/types/popup-style.type';
-import {CategoryURLType} from 'src/types/categoryURL.type';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { OwlOptions } from "ngx-owl-carousel-o";
+import { PopupComponent } from "../../shared/components/popup/popup.component";
+import { ArticleType } from "../../../types/article.type";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ArticlesService } from "../../shared/services/articles.service";
+import { DefaultResponseType } from "../../../types/default-response.type";
+import { PopupStyleType } from 'src/types/popup-style.type';
+import { CategoryURLType } from 'src/types/categoryURL.type';
 
 @Component({
   selector: 'app-main',
@@ -39,7 +39,7 @@ export class MainComponent implements OnInit {
         items: 1
       }
     },
-  }
+  };
 
   customOptionsRev: OwlOptions = {
     loop: true,
@@ -62,11 +62,13 @@ export class MainComponent implements OnInit {
       }
     },
     nav: false
-  }
+  };
 
   @ViewChild(PopupComponent)
-  private popupComponent!: PopupComponent;
+  private popupComponent?: PopupComponent;
+
   popularArticles: ArticleType[] = [];
+
   reviews = [
     {
       image: 'rev1.png',
@@ -107,27 +109,33 @@ export class MainComponent implements OnInit {
     },
   ];
 
-  constructor(private articlesService: ArticlesService,
-              private _snackBar: MatSnackBar) {
+  constructor(
+    private articlesService: ArticlesService,
+    private _snackBar: MatSnackBar
+  ) {
   }
 
   ngOnInit(): void {
     this.articlesService.getPopularArticles()
       .subscribe({
-        next: ((data: ArticleType[]) => {
+        next: (data: ArticleType[]): void => {
           this.popularArticles = data;
-        }),
-        error: ((error: DefaultResponseType) => {
+        },
+        error: (error: DefaultResponseType): void => {
           if (error.message) {
-            this._snackBar.open(error.message)
+            this._snackBar.open(error.message);
           } else {
             this._snackBar.open("Ошибка получения данных!");
           }
-        })
-      })
+        }
+      });
   }
 
-  public openPopup(param: PopupStyleType, categoryUrl: CategoryURLType) {
+  public openPopup(param: PopupStyleType, categoryUrl: CategoryURLType): void {
+    if (!this.popupComponent) {
+      return;
+    }
+
     this.popupComponent.openPopup(param, categoryUrl);
   }
 
@@ -138,8 +146,20 @@ export class MainComponent implements OnInit {
 
   private getMonthName(monthNumber: number): string {
     const months = [
-      'январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'
+      'январь',
+      'февраль',
+      'март',
+      'апрель',
+      'май',
+      'июнь',
+      'июль',
+      'август',
+      'сентябрь',
+      'октябрь',
+      'ноябрь',
+      'декабрь'
     ];
+
     return months[monthNumber];
   }
 

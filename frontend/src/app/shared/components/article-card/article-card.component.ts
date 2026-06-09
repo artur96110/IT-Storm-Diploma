@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ArticleType} from "../../../../types/article.type";
+import { Component, Input, OnInit } from '@angular/core';
+import { ArticleType } from "../../../../types/article.type";
 
 @Component({
   selector: 'article-card',
@@ -7,12 +7,24 @@ import {ArticleType} from "../../../../types/article.type";
   styleUrls: ['./article-card.component.scss']
 })
 export class ArticleCardComponent implements OnInit {
-  @Input() article!: ArticleType;
+
+  @Input() article: ArticleType;
 
   constructor() {
+    this.article = {
+      id: '',
+      title: '',
+      description: '',
+      image: '',
+      date: '',
+      category: '',
+      url: '',
+      text: '',
+      comments: [],
+      commentsCount: 0
+    };
   }
 
   ngOnInit(): void {
   }
-
 }

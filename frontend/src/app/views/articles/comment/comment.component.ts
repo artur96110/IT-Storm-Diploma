@@ -14,8 +14,8 @@ import { AuthService } from "../../../core/auth/auth.service";
   styleUrls: ['./comment.component.scss']
 })
 export class CommentComponent implements OnInit {
-  @Input() comment!: CommentType;
-  @Input() articleId!: string;
+  @Input() comment: CommentType;
+  @Input() articleId: string;
 
   likeChecked = false;
   dislikeChecked = false;
@@ -28,6 +28,20 @@ export class CommentComponent implements OnInit {
     private authService: AuthService,
     private commentsService: CommentsService
   ) {
+
+    this.comment = {
+      id: '',
+      text: '',
+      date: '',
+      likesCount: 0,
+      dislikesCount: 0,
+      user: {
+        id: '',
+        name: ''
+      }
+    };
+
+    this.articleId = '';
   }
 
   ngOnInit(): void {

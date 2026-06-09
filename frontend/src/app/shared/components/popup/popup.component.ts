@@ -9,7 +9,7 @@ import { CategoryURLType } from "../../../../types/categoryURL.type";
 import { PopupStyleType } from 'src/types/popup-style.type';
 import { UserService } from "../../services/user.service";
 import { UserInfoType } from "../../../../types/user-info.type";
-import {AuthService} from "../../../core/auth/auth.service";
+import { AuthService } from "../../../core/auth/auth.service";
 
 @Component({
   selector: 'app-popup',
@@ -17,17 +17,20 @@ import {AuthService} from "../../../core/auth/auth.service";
   styleUrls: ['./popup.component.scss']
 })
 export class PopupComponent implements OnInit {
-  @ViewChild('popup') popup!: TemplateRef<ElementRef>;
+
+  @ViewChild('popup')
+  popup?: TemplateRef<ElementRef>;
 
   public auth = this.authService;
   public stylePopup: PopupStyleType = PopupStyleType.consultation;
   public requestError: string | null = null;
-  public categories: {url: CategoryURLType, name: string}[] = [
-    {url: CategoryURLType.frilans, name: 'Фриланс'},
-    {url: CategoryURLType.dizain, name: 'Создание сайтов'},
-    {url: CategoryURLType.smm, name: 'Реклама'},
-    {url: CategoryURLType.target, name: 'Продвижение'},
-    {url: CategoryURLType.kopiraiting, name: 'Копирайтинг'}
+
+  public categories: { url: CategoryURLType, name: string }[] = [
+    { url: CategoryURLType.frilans, name: 'Фриланс' },
+    { url: CategoryURLType.dizain, name: 'Создание сайтов' },
+    { url: CategoryURLType.smm, name: 'Реклама' },
+    { url: CategoryURLType.target, name: 'Продвижение' },
+    { url: CategoryURLType.kopiraiting, name: 'Копирайтинг' }
   ];
 
   public popupForm = this.fb.group({
@@ -43,18 +46,25 @@ export class PopupComponent implements OnInit {
     private requestsService: RequestsService,
     private authService: AuthService,
     private userService: UserService
-  ) {}
+  ) {
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.authService.getIsLoggedIn()) {
       this.loadUserName();
     }
   }
 
   public openPopup(param: PopupStyleType, categoryUrl?: CategoryURLType): void {
+    if (!this.popup) {
+      return;
+    }
+
     this.stylePopup = param;
     this.requestError = null;
+
     const wasNameDisabled = this.popupForm.get('name')?.disabled;
+
     this.popupForm.reset();
 
     if (param === PopupStyleType.order && categoryUrl) {
@@ -72,7 +82,7 @@ export class PopupComponent implements OnInit {
     this.modalService.open(this.popup);
   }
 
-  public closePopup() {
+  public closePopup(): void {
     this.requestError = null;
     this.popupForm.get('order')?.markAsUntouched();
     this.popupForm.get('name')?.markAsUntouched();
@@ -80,66 +90,79 @@ export class PopupComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  public callBack(type: PopupStyleType) {
+  public callBack(type: PopupStyleType): void {
+    const name = this.popupForm.get('name')?.value;
+    const phone = this.popupForm.get('phone')?.value;
+    const service = this.popupForm.get('order')?.value;
+
+    if (!name || !phone) {
+      return;
+    }
+
     if (type === PopupStyleType.order) {
-      if (this.popupForm.valid && this.popupForm.get('name')?.value && this.popupForm.get('phone')?.value && this.popupForm.get('order')?.value) {
+      if (!service) {
+        return;
+      }
+
+      if (this.popupForm.valid) {
         const params: RequestType = {
-          name: this.popupForm.get('name')?.value!,
-          phone: this.popupForm.get('phone')?.value!,
-          service: this.popupForm.get('order')?.value!,
-          type: type,
-        }
+          name,
+          phone,
+          service,
+          type
+        };
 
         this.requestsService.sendRequestOrder(params)
           .subscribe({
-            next: ((data: DefaultResponseType) => {
+            next: (data: DefaultResponseType): void => {
               if (!data.error) {
                 this.stylePopup = PopupStyleType.success;
               }
-            }),
-            error: (() => {
+            },
+            error: (): void => {
               this.requestError = 'Ошибка при отправке формы. Попробуйте еще раз';
-            })
+            }
           });
       }
     }
 
     if (type === PopupStyleType.consultation) {
-      if (this.popupForm.valid && this.popupForm.get('name')?.value && this.popupForm.get('phone')?.value) {
+      if (this.popupForm.valid) {
         const params: RequestType = {
-          name: this.popupForm.get('name')?.value!,
-          phone: this.popupForm.get('phone')?.value!,
-          type: type,
-        }
+          name,
+          phone,
+          type
+        };
 
         this.requestsService.sendRequestConsultation(params)
           .subscribe({
-            next: ((data: DefaultResponseType) => {
+            next: (data: DefaultResponseType): void => {
               if (!data.error) {
                 this.stylePopup = PopupStyleType.success;
               }
-            }),
-            error: (() => {
+            },
+            error: (): void => {
               this.requestError = 'Ошибка при отправке формы. Попробуйте еще раз';
-            })
+            }
           });
       }
     }
   }
 
   private loadUserName(): void {
-    this.userService.getUserInfo().subscribe({
-      next: (data: UserInfoType | DefaultResponseType) => {
-        if (!('error' in data)) {
-          const userName = (data as UserInfoType).name;
-          this.popupForm.get('name')?.setValue(userName);
-          this.popupForm.get('name')?.disable();
+    this.userService.getUserInfo()
+      .subscribe({
+        next: (data: UserInfoType | DefaultResponseType): void => {
+          if (!('error' in data)) {
+            const userName = (data as UserInfoType).name;
+            this.popupForm.get('name')?.setValue(userName);
+            this.popupForm.get('name')?.disable();
+          }
+        },
+        error: (): void => {
+          this._snackBar.open('Ошибка загрузки данных пользователя!');
         }
-      },
-      error: () => {
-        this._snackBar.open('Ошибка загрузки данных пользователя!');
-      }
-    });
+      });
   }
 
   protected readonly PopupStyleType = PopupStyleType;
