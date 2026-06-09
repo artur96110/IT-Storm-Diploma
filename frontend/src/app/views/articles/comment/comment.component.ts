@@ -1,12 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {CommentType} from "../../../../types/comment.type";
-import {CommentReactionType} from "../../../../types/comment-reaction.type";
-import {DefaultResponseType} from "../../../../types/default-response.type";
-import {HttpErrorResponse} from "@angular/common/http";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {CommentsService} from "../../../shared/services/comments.service";
-import {CommentReactionResponseType} from "../../../../types/comment-reaction-response.type";
-import {AuthService} from "../../../core/auth/auth.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { CommentType } from "../../../../types/comment.type";
+import { CommentReactionType } from "../../../../types/comment-reaction.type";
+import { DefaultResponseType } from "../../../../types/default-response.type";
+import { HttpErrorResponse } from "@angular/common/http";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { CommentsService } from "../../../shared/services/comments.service";
+import { CommentReactionResponseType } from "../../../../types/comment-reaction-response.type";
+import { AuthService } from "../../../core/auth/auth.service";
 
 @Component({
   selector: 'app-comment',
@@ -16,14 +16,18 @@ import {AuthService} from "../../../core/auth/auth.service";
 export class CommentComponent implements OnInit {
   @Input() comment!: CommentType;
   @Input() articleId!: string;
-  likeChecked: boolean = false;
-  dislikeChecked: boolean = false;
-  violateSend: boolean = false;
-  private isLogged: boolean = false;
 
-  constructor(private _snackBar: MatSnackBar,
-              private authService: AuthService,
-              private commentsService: CommentsService) {
+  likeChecked = false;
+  dislikeChecked = false;
+  violateSend = false;
+
+  private isLogged = false;
+
+  constructor(
+    private _snackBar: MatSnackBar,
+    private authService: AuthService,
+    private commentsService: CommentsService
+  ) {
   }
 
   ngOnInit(): void {
@@ -37,13 +41,14 @@ export class CommentComponent implements OnInit {
   private loadUserReactions(): void {
     this.commentsService.getUserReactions(this.articleId)
       .subscribe({
-        next: (data: CommentReactionResponseType[]) => {
-          const userReaction = data.find(item => item.comment === this.comment.id);
+        next: (data: CommentReactionResponseType[]): void => {
+          const userReaction = data.find((item: CommentReactionResponseType) => item.comment === this.comment.id);
+
           if (userReaction) {
             this.updateReactionState(userReaction.action);
           }
         },
-        error: (errorResponse: HttpErrorResponse) => {
+        error: (errorResponse: HttpErrorResponse): void => {
           this.handleError(errorResponse);
         }
       });
@@ -60,10 +65,6 @@ export class CommentComponent implements OnInit {
       return;
     }
 
-    if (this.likeChecked) {
-      return;
-    }
-
     this.applyReaction(id, CommentReactionType.like);
   }
 
@@ -73,17 +74,13 @@ export class CommentComponent implements OnInit {
       return;
     }
 
-    if (this.dislikeChecked) {
-      return;
-    }
-
     this.applyReaction(id, CommentReactionType.dislike);
   }
 
-  private applyReaction(commentId: string, action: CommentReactionType | null): void {
+  private applyReaction(commentId: string, action: CommentReactionType): void {
     this.commentsService.applyReactionToComment(commentId, action)
       .subscribe({
-        next: (data: DefaultResponseType) => {
+        next: (data: DefaultResponseType): void => {
           if (!data.error) {
             this.updateLocalReactionState(action);
             this._snackBar.open('Ваш голос учтен!');
@@ -91,24 +88,30 @@ export class CommentComponent implements OnInit {
             this._snackBar.open(data.message || 'Произошла ошибка!');
           }
         },
-        error: (errorResponse: HttpErrorResponse) => {
-          if (errorResponse.error) {
-            const errorMessage = typeof errorResponse.error === 'object'
-              ? errorResponse.error.message
-              : errorResponse.error;
-            this._snackBar.open(errorMessage || 'Неизвестная ошибка сервера!');
-          } else {
-            this._snackBar.open('Ошибка соединения с сервером!');
-          }
+        error: (errorResponse: HttpErrorResponse): void => {
+          this.handleError(errorResponse);
         }
       });
   }
 
-  private updateLocalReactionState(action: CommentReactionType | null): void {
+  private updateLocalReactionState(action: CommentReactionType): void {
+    if (action === CommentReactionType.like && this.likeChecked) {
+      this.likeChecked = false;
+      this.comment.likesCount--;
+      return;
+    }
+
+    if (action === CommentReactionType.dislike && this.dislikeChecked) {
+      this.dislikeChecked = false;
+      this.comment.dislikesCount--;
+      return;
+    }
+
     if (this.likeChecked) {
       this.likeChecked = false;
       this.comment.likesCount--;
     }
+
     if (this.dislikeChecked) {
       this.dislikeChecked = false;
       this.comment.dislikesCount--;
@@ -117,7 +120,9 @@ export class CommentComponent implements OnInit {
     if (action === CommentReactionType.like) {
       this.likeChecked = true;
       this.comment.likesCount++;
-    } else if (action === CommentReactionType.dislike) {
+    }
+
+    if (action === CommentReactionType.dislike) {
       this.dislikeChecked = true;
       this.comment.dislikesCount++;
     }
@@ -136,12 +141,12 @@ export class CommentComponent implements OnInit {
 
     this.commentsService.applyReactionToComment(id, CommentReactionType.violate)
       .subscribe({
-        next: (data: DefaultResponseType) => {
+        next: (data: DefaultResponseType): void => {
           this.violateSend = true;
           const message = data.error ? data.message : 'Жалоба отправлена';
           this._snackBar.open(message);
         },
-        error: (errorResponse: HttpErrorResponse) => {
+        error: (errorResponse: HttpErrorResponse): void => {
           if (errorResponse.status === 400) {
             this.violateSend = true;
             this._snackBar.open('Жалоба уже отправлена!');
